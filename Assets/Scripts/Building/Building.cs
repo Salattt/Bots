@@ -1,16 +1,18 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Building<T> : MonoBehaviour where T : BuildingView
+public abstract class Building : MonoBehaviour
 {
     [SerializeField] private List<Resource> _resourcesToLevelup;
 
+    [SerializeField] private float resourcesToLevelupMultiplier;
+    [SerializeField] private WareHouse _warehouse;
+    [SerializeField] private int _resourcesToLevelupQuantity;
+
     private List<Cell> _cellsToLevelup;
 
-    [SerializeField] protected T View;
-    [SerializeField] private float resourcesToLevelupMultiplier;
-    [SerializeField] private Wareouse _warehouse;
-    [SerializeField] private int _resourcesToLevelupQuantity;
+    public event Action LevelupInfoChanged;
 
     protected virtual void Awake()
     {
@@ -24,24 +26,10 @@ public abstract class Building<T> : MonoBehaviour where T : BuildingView
 
     private void OnEnable()
     {
-        View.LevelupRequired += TryLevelup;
-
-        UpdateLevelupView();
+        LevelupInfoChanged?.Invoke();
     }
 
-    private void OnDisable()
-    {
-        View.LevelupRequired -= TryLevelup;
-    }
-
-    protected abstract void OnLevelup();
-
-    protected virtual bool IsLevelupPossible()
-    {
-        return true; 
-    }
-
-    private void TryLevelup()
+    public void TryLevelup()
     {
         if (IsLevelupPossible())
         {
@@ -54,12 +42,12 @@ public abstract class Building<T> : MonoBehaviour where T : BuildingView
 
                 OnLevelup();
 
-                UpdateLevelupView();
+                LevelupInfoChanged?.Invoke();
             }
         }
     }
 
-    private void UpdateLevelupView()
+    public List<Cell> GetLevelupInfo()
     {
         List<Cell> resourcesToLevelup = new List<Cell>();
 
@@ -68,6 +56,13 @@ public abstract class Building<T> : MonoBehaviour where T : BuildingView
             resourcesToLevelup.Add(cell.Clone());
         }
 
-        View.UpdateResorcesToLevelup(resourcesToLevelup);
+        return resourcesToLevelup;
+    }
+
+    protected abstract void OnLevelup();
+
+    protected virtual bool IsLevelupPossible()
+    {
+        return true; 
     }
 }

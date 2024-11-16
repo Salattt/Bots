@@ -34,7 +34,7 @@ public class ResourceHolder : MonoBehaviour
 
         foreach (MapResource resource in list) 
         {
-            if((resource.Transform.position - position).magnitude < (closestResource.Transform.position - position).magnitude)
+            if((resource.Transform.position - position).sqrMagnitude < (closestResource.Transform.position - position).sqrMagnitude)
                 closestResource = resource;
         }
 

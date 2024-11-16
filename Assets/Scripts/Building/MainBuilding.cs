@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MainBuilding : Building<BuildingView>
+public class MainBuilding : Building
 {
     [SerializeField] private List<BotBuilding> _botBuildings;
 

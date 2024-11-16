@@ -112,9 +112,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36d624796ede00349b0284fda9a283ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  View: {fileID: 8263672985446397947}
+  _resourcesToLevelup: []
   resourcesToLevelupMultiplier: 2
   _warehouse: {fileID: 0}
+  _resourcesToLevelupQuantity: 0
   _botBuildings: []
 --- !u!135 &8123013754348922799
 SphereCollider:
@@ -253,6 +254,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5107395012534081839, guid: b2b5af9ac9173ec488a125bd5e7f4e29, type: 3}
+      propertyPath: _building
+      value: 
+      objectReference: {fileID: 1558680041434187932}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b2b5af9ac9173ec488a125bd5e7f4e29, type: 3}
 --- !u!224 &1069841736559896019 stripped
@@ -260,14 +265,3 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4222051104407292679, guid: b2b5af9ac9173ec488a125bd5e7f4e29, type: 3}
   m_PrefabInstance: {fileID: 3769348476965760724}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8263672985446397947 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5107395012534081839, guid: b2b5af9ac9173ec488a125bd5e7f4e29, type: 3}
-  m_PrefabInstance: {fileID: 3769348476965760724}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96512351f46d17b48b593566268ebeee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

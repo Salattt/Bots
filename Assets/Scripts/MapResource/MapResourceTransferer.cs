@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent (typeof(SphereCollider))]
 public class MapResourceTransferer : MonoBehaviour
 {
-    [SerializeField] private Wareouse _wareouse;
+    [SerializeField] private WareHouse _wareouse;
 
     public Transform Transform { get; private set; }
 

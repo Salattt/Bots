@@ -1,15 +1,18 @@
 using System;
 using UnityEngine;
 
-public class BotBuilding : Building<BotBuildingView>
+public class BotBuilding : Building
 {
     [SerializeField] private int _botsPerUpgrade;
     [SerializeField] private int _startingBots;
     [SerializeField] private BotSpawner _spawner;
-    [SerializeField] private Resource _collectingResource;
 
-    private int _maxBots;
-    private int _currentBots;
+    public event Action BotQuantityChanged;
+
+    public int MaxBots { get;private set; }
+    public int CurrentBots {  get; private set; }
+
+    [field:SerializeField] public Resource CollectingResource { get; private set; }
 
     protected override void Awake()
     {
@@ -18,49 +21,37 @@ public class BotBuilding : Building<BotBuildingView>
         if (_startingBots > _botsPerUpgrade)
             throw new ArgumentOutOfRangeException(nameof(_startingBots));
 
-        _maxBots = _botsPerUpgrade;
-        _currentBots = _startingBots;
+        MaxBots = _botsPerUpgrade;
+        CurrentBots = _startingBots;
     }
 
     private void Start()
     {
-        _spawner.SetupResource(_collectingResource);
+        _spawner.SetupResource(CollectingResource);
 
         for (int i = 0; i < _startingBots; i++)
         {
             _spawner.Spawn();
         }
 
-        UpdateBotQuantity();
-        View.SetupResource(_collectingResource);
+        BotQuantityChanged?.Invoke();
     }
 
     public void Upgrade()
     {
-        _maxBots += _botsPerUpgrade;
+        MaxBots += _botsPerUpgrade;
 
-        UpdateBotQuantity();
+        BotQuantityChanged?.Invoke();
     }
 
-    protected override bool IsLevelupPossible()
-    {
-        if (_currentBots < _maxBots)
-            return true;
-
-        return false;
-    }
+    protected override bool IsLevelupPossible() => CurrentBots < MaxBots;
 
     protected override void OnLevelup()
     {
         _spawner.Spawn();
 
-        _currentBots++;
+        CurrentBots++;
 
-        UpdateBotQuantity();
-    }
-
-    private void UpdateBotQuantity()
-    {
-        View.UpdateBotQuantity(_maxBots, _currentBots);
+        BotQuantityChanged?.Invoke();
     }
 }

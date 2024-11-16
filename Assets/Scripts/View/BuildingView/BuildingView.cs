@@ -10,22 +10,23 @@ public class BuildingView : MonoBehaviour
     [SerializeField] private Button _levelupButton;
     [SerializeField] private CellView _cellView;
     [SerializeField] private Transform _content;
-
-    public event Action LevelupRequired;
+    [SerializeField] private Building _building;
 
     private void OnEnable()
     {
+        _building.LevelupInfoChanged += UpdateResorcesToLevelup;
         _levelupButton.onClick.AddListener(OnLevelupButtonClicked);
     }
 
     private void OnDisable()
     {
+        _building.LevelupInfoChanged -= UpdateResorcesToLevelup;
         _levelupButton.onClick.RemoveListener(OnLevelupButtonClicked);
     }
 
-    public void UpdateResorcesToLevelup(List<Cell> resourcesToLevelup)
+    private void UpdateResorcesToLevelup()
     {
-        foreach (Cell cell in resourcesToLevelup) 
+        foreach (Cell cell in _building.GetLevelupInfo()) 
         { 
             if(_cellViews.ContainsKey(cell.Resource) == false)
             {
@@ -38,6 +39,6 @@ public class BuildingView : MonoBehaviour
 
     private void OnLevelupButtonClicked()
     {
-        LevelupRequired?.Invoke();
+        _building.TryLevelup();
     }
 }

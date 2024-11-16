@@ -4,10 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class MapResourceSpawner : MonoBehaviour
 {
-    [SerializeField] private List<MapResource> _resources;
-
     [SerializeField] private int _spawnQuantity;
-    [SerializeField] private ResourceHolder _holder; 
+    [SerializeField] private MapResourcePool _pool;
 
     private BoxCollider _spawnZone;
     private Transform _transform;
@@ -24,11 +22,9 @@ public class MapResourceSpawner : MonoBehaviour
     {
         for (int i = 0; i < _spawnQuantity; i++)
         {
-            foreach (MapResource resource in _resources)
-            {
-                MapResource mapResource = Instantiate(resource, GenerateSpawnPoint(), _transform.rotation);
-                _holder.Add(mapResource);
-            }
+            MapResource mapResource = _pool.GetResource();
+            mapResource.Transform.position = GenerateSpawnPoint();
+
         }
     }
 

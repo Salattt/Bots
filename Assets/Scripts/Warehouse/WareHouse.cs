@@ -1,12 +1,12 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Wareouse : MonoBehaviour
+public class WareHouse : MonoBehaviour
 {
     private Dictionary<Resource, Cell> _resources = new Dictionary<Resource, Cell>();
 
-    [SerializeField] private WarehouseView _warehouseView;
+    public event Action ResourceUpdated;
 
     public void AddResource(Cell cell)
     {
@@ -15,7 +15,7 @@ public class Wareouse : MonoBehaviour
 
         _resources[cell.Resource].Add(cell.Quantity);
 
-        UpdateView();
+        ResourceUpdated?.Invoke();
     }
 
     public bool TryGetResources(List<Cell> requestedResources)
@@ -24,7 +24,7 @@ public class Wareouse : MonoBehaviour
 
         foreach (Cell resource in requestedResources)
         {
-            if(CheckResourceQuantity(resource) == false)
+            if(CheckResourceAvailability(resource) == false)
                 isResourcesAvaible = false;
         }
 
@@ -34,6 +34,18 @@ public class Wareouse : MonoBehaviour
         }
 
         return isResourcesAvaible;
+    }
+
+    public List<Cell> GetStoringResource()
+    {
+        List<Cell> resources = new List<Cell>();
+
+        foreach (Cell resource in _resources.Values)
+        {
+            resources.Add(resource.Clone());
+        }
+
+        return resources;
     }
 
     private void GetResources(List<Cell> requredResources)
@@ -46,32 +58,17 @@ public class Wareouse : MonoBehaviour
             }
         }
 
-        UpdateView();
+        ResourceUpdated?.Invoke();
     }
 
-    private bool CheckResourceQuantity(Cell cell)
+    private bool CheckResourceAvailability(Cell cell)
     {
         if(_resources.ContainsKey(cell.Resource) == false)
-        {
-            _resources.Add(cell.Resource, new Cell (cell.Resource,0));
-        }
+            return false;
 
         if (_resources[cell.Resource].Quantity >= cell.Quantity)
             return true;
 
         return false;
-    }
-
-    private void UpdateView()
-    {
-        List<Cell> resources = new List<Cell>();
-
-        foreach (Cell cell in _resources.Values)
-        {
-            resources.Add(cell.Clone());
-        }
-
-
-        _warehouseView.UpdateResorces(resources);
     }
 }

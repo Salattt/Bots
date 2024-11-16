@@ -9,6 +9,7 @@ public class MapResource : MonoBehaviour
     private Cell _cell;
 
     public event Action TransferedToWarehouse;
+    public event Action<MapResource> Destroyed;
 
     public Transform Transform {  get; private set; }
     public Cell Cell => _cell.Clone();
@@ -22,7 +23,6 @@ public class MapResource : MonoBehaviour
     public void Collect() 
     { 
         TransferedToWarehouse?.Invoke();
-
-        Destroy(this.gameObject);
+        Destroyed?.Invoke(this);
     }
 }
